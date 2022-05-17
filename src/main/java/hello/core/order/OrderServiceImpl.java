@@ -1,18 +1,22 @@
 package hello.core.order;
 
 import hello.core.discount.DiscountPolicy;
-import hello.core.discount.FixDiscountPolicy;
-import hello.core.discount.RateDiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
-import hello.core.member.MemoryMemberRepository;
 
 public class OrderServiceImpl implements OrderService{
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
+    // 구체적인 클래스를 모름 - DIP 를 지키고 있다.
+    // OrderServiceImpl 은 MemberRepository 추상에만 의존하면 된다.
+    private final MemberRepository memberRepository;
     //private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
     //ocp 위반
-    private final DiscountPolicy discountPolicy = new RateDiscountPolicy();
+    private final DiscountPolicy discountPolicy;
+
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     @Override
     public Order createOrder(Long memberId, String itemName, int itemPrice) {
